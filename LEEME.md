@@ -1,6 +1,6 @@
-# Quevamos: código base (Expo)
+# Quevamos
 
-Proyecto de Expo con TypeScript, creado con la plantilla `blank-typescript` del SDK 57. Acompaña a la guía «Quevamos — Guía: Windows, Expo y proyecto base».
+Repositorio de Quevamos: la app, en la raíz, y el servidor, en `servidor/`. La app es un proyecto de Expo con TypeScript, creado con la plantilla `blank-typescript` del SDK 57; acompaña a la guía «Quevamos — Guía: Windows, Expo y proyecto base». El servidor tiene su propio [LEEME](servidor/LEEME.md).
 
 ## Qué contiene
 
@@ -12,6 +12,7 @@ Proyecto de Expo con TypeScript, creado con la plantilla `blank-typescript` del 
 | `App.tsx` | Punto de entrada de la app |
 | `app.json` | Nombre, icono y ajustes de la app |
 | `AGENTS.md` | Instrucciones para asistentes de programación |
+| `servidor/` | API de la app con Node.js y Fastify: cuentas, sesiones y, más adelante, el resto de módulos |
 
 ## Comandos
 
@@ -26,7 +27,7 @@ Proyecto de Expo con TypeScript, creado con la plantilla `blank-typescript` del 
 
 ## Comprobaciones automáticas
 
-Cada cambio que llega a GitHub pasa por tipos, estilo y pruebas, con la configuración de `.github/workflows/comprobaciones.yml`. El resultado aparece en la pestaña Actions del repositorio: si algo falla, el cambio no se da por bueno.
+Cada cambio que llega a GitHub pasa por tipos, estilo y pruebas, de la app y del servidor, con la configuración de `.github/workflows/comprobaciones.yml`. Las pruebas del servidor se ejecutan con PGlite y con un PostgreSQL de verdad. El resultado aparece en la pestaña Actions del repositorio: si algo falla, el cambio no se da por bueno.
 
 ## Los estados
 

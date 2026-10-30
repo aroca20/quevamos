@@ -8,6 +8,7 @@ App móvil de conexión presencial: cada persona muestra su disponibilidad (Verd
 - `src/ahora/`: pantalla «Ahora», su modelo (funciones puras) y el editor del estado personalizado.
 - `src/ui/`: colores en modo claro y oscuro e iconos de los estados.
 - Las pruebas viven en carpetas `__tests__` junto al código que prueban.
+- `servidor/`: API con Node.js, TypeScript y Fastify, como proyecto aparte con su `package.json`. Monolito modular: cada parte va en `servidor/src/modulos/<nombre>/` con su `servicio.ts` (lógica y SQL) y sus `rutas.ts` (HTTP y validación con zod). Usa el mismo motor de la app a través de `servidor/src/motor.ts`. Sus pruebas están en `servidor/test/`.
 
 ## Comandos
 
@@ -19,7 +20,17 @@ npm run typecheck           # comprobación de tipos
 npm run lint                # estilo del código
 ```
 
-Antes de dar un cambio por terminado: pruebas, tipos y lint sin errores. GitHub Actions repite esas tres comprobaciones en cada cambio (`.github/workflows/comprobaciones.yml`).
+En el servidor, desde `servidor/`:
+
+```bash
+npm run dev                 # arranca con PGlite en .datos/; el código de acceso sale en la consola
+npm test                    # pruebas con Vitest (PGlite; también PostgreSQL si hay DATABASE_URL_PRUEBAS)
+npm run typecheck
+npm run lint
+npm run build               # dist/principal.js
+```
+
+Antes de dar un cambio por terminado: pruebas, tipos y lint sin errores, en la app y en el servidor. GitHub Actions repite esas comprobaciones en cada cambio (`.github/workflows/comprobaciones.yml`).
 
 ## Reglas
 
@@ -28,3 +39,7 @@ Antes de dar un cambio por terminado: pruebas, tipos y lint sin errores. GitHub 
 - No crees ni edites a mano las carpetas `ios/` y `android/`: se generan a partir de `app.json` y los plugins de configuración.
 - Nada de secretos en el código ni en variables `EXPO_PUBLIC_`: se incrustan en la app y cualquiera puede leerlos.
 - Antes de usar una API de Expo, consulta la documentación de la versión del SDK que indique `package.json`.
+- `src/motor/` lo usan la app y el servidor: no puede importar nada de Expo ni de React Native. Tiene su propio `tsconfig.json` y un `package.json` que lo marca como ESM para que el servidor lo cargue sin las dependencias de la app.
+- Servidor: las migraciones de `servidor/src/bd/migraciones.ts` no se editan una vez publicadas; un cambio de esquema es una migración nueva al final. Todo el SQL va con parámetros (`$1`, `$2`…), nunca concatenando datos.
+- Servidor: nunca registres ni devuelvas tokens, códigos de acceso ni correos en claro; la única excepción es `CorreoConsola`, que solo existe en desarrollo. Los errores para la app se lanzan con `ErrorApi` (código estable y mensaje en español).
+- Servidor: las claves y la conexión a la base de datos solo llegan por variables de entorno.

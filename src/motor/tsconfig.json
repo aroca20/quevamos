@@ -1,0 +1,16 @@
+{
+  // El motor no depende de Expo: lo comparten la app y el servidor. Esta configuración propia permite
+  // compilarlo desde el servidor sin instalar las dependencias de la app.
+  "compilerOptions": {
+    "target": "ES2022",
+    "lib": ["ES2022"],
+    "module": "ESNext",
+    "moduleResolution": "Bundler",
+    "strict": true,
+    "isolatedModules": true,
+    "skipLibCheck": true,
+    "noEmit": true,
+    "types": ["jest"]
+  },
+  "include": ["**/*.ts"]
+}

@@ -31,6 +31,13 @@
   },
   "private": true,
   "jest": {
-    "preset": "jest-expo"
+    "preset": "jest-expo",
+    "testPathIgnorePatterns": [
+      "/node_modules/",
+      "<rootDir>/servidor/"
+    ],
+    "modulePathIgnorePatterns": [
+      "<rootDir>/servidor/"
+    ]
   }
 }

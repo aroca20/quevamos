@@ -44,3 +44,6 @@ yarn-error.*
 .env
 credentials.json
 *.cer
+
+# Base de datos local del servidor en desarrollo (PGlite)
+.datos/
