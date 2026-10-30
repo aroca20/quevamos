@@ -5,6 +5,7 @@ const expoConfig = require("eslint-config-expo/flat");
 module.exports = defineConfig([
   expoConfig,
   {
-    ignores: ["dist/*"],
+    // El servidor tiene su propia configuración de estilo.
+    ignores: ["dist/*", "servidor/**"],
   }
 ]);

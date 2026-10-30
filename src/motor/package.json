@@ -1,0 +1,5 @@
+{
+  "private": true,
+  "description": "Motor de disponibilidad, compartido por la app y el servidor. Es ESM para que Node lo cargue igual que el servidor.",
+  "type": "module"
+}

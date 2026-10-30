@@ -1,0 +1,45 @@
+# Compila la app en la nube de Expo y la envía a TestFlight.
+# Se lanza a mano: pestaña Actions → «TestFlight» → «Run workflow».
+# Antes hace falta la configuración inicial del LEEME (sección «Publicar en TestFlight»).
+name: TestFlight
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  testflight:
+    name: Compilar y enviar a TestFlight
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v5
+      - uses: actions/setup-node@v5
+        with:
+          node-version: lts/*
+          cache: npm
+      - name: Comprobar la configuración inicial
+        env:
+          EXPO_TOKEN: ${{ secrets.EXPO_TOKEN }}
+        run: |
+          if [ -z "$EXPO_TOKEN" ]; then
+            echo "::error::Falta el secreto EXPO_TOKEN en GitHub. Sigue la configuración inicial del LEEME."
+            exit 1
+          fi
+          node -e "
+            const app = require('./app.json').expo;
+            const eas = require('./eas.json');
+            if (!app.extra?.eas?.projectId) throw new Error('Falta extra.eas.projectId en app.json: haz antes la primera compilación desde tu PC.');
+            if (!eas.submit?.production?.ios?.ascAppId) throw new Error('Falta submit.production.ios.ascAppId en eas.json: es el Apple ID de la app en App Store Connect.');
+          "
+      - name: Instalar dependencias
+        run: npm ci
+      - name: Pruebas antes de compilar
+        run: npm test -- --ci
+      - name: Compilar en EAS y enviar a TestFlight
+        env:
+          EXPO_TOKEN: ${{ secrets.EXPO_TOKEN }}
+        # --no-wait: la compilación sigue en Expo; Apple te avisa por correo cuando esté en TestFlight.
+        run: npx --yes eas-cli@27 build --platform ios --profile production --non-interactive --no-wait --auto-submit
