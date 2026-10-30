@@ -47,3 +47,31 @@ npm test
 ```
 
 El SDK 58 necesita Jest 30 para las pruebas; por eso va la segunda línea.
+
+## Publicar en TestFlight
+
+La app se compila en la nube de Expo, sin Mac, y llega a tu iPhone por TestFlight. La primera vez se hace desde tu PC, porque Apple pide tu contraseña y el código de doble factor. Después basta un botón en GitHub.
+
+### Configuración inicial (una sola vez)
+
+1. En PowerShell, desde la carpeta del repositorio, inicia sesión en Expo:
+   ```
+   npx eas-cli@27 login
+   ```
+2. Lanza la primera compilación y su envío a App Store Connect:
+   ```
+   npx eas-cli@27 build --platform ios --profile production --auto-submit
+   ```
+   Contesta que sí a crear el proyecto de EAS, entra con tu cuenta de Apple Developer y deja que EAS genere el certificado, el perfil de aprovisionamiento y la clave de App Store Connect. Cuando pregunte el nombre de la app en la tienda, prueba con «Quevamos»; si está cogido, elige una variante.
+3. Esa compilación añade el identificador del proyecto a `app.json`. En VS Code, confirma ese cambio desde Control de código fuente y sincroniza.
+4. En App Store Connect, abre la app, entra en Información de la app y copia su Apple ID: un número de unos diez dígitos. Hay que ponerlo en `eas.json` como `ascAppId` (Claude puede hacerlo).
+5. En expo.dev, crea un token de acceso desde la configuración de tu cuenta («Access tokens») y guárdalo en GitHub como secreto `EXPO_TOKEN`: Settings → Secrets and variables → Actions → New repository secret.
+6. Instala TestFlight en el iPhone. EAS crea un grupo de pruebas interno; si no ves la app, añádete como probador interno en App Store Connect, en la pestaña TestFlight.
+
+### Cada versión nueva
+
+En GitHub: pestaña Actions → «TestFlight» → «Run workflow». Primero pasan las pruebas y luego Expo compila; Apple te avisa por correo cuando la versión está lista en TestFlight. El número de compilación sube solo.
+
+El plan gratuito de Expo da 15 compilaciones de iOS al mes y las pone en una cola lenta: lánzalo cuando haya algo que probar en el iPhone, no con cada cambio.
+
+El identificador de la app es `com.quevamos.app` y no se puede cambiar.

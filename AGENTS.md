@@ -39,6 +39,8 @@ Antes de dar un cambio por terminado: pruebas, tipos y lint sin errores, en la a
 - No crees ni edites a mano las carpetas `ios/` y `android/`: se generan a partir de `app.json` y los plugins de configuración.
 - Nada de secretos en el código ni en variables `EXPO_PUBLIC_`: se incrustan en la app y cualquiera puede leerlos.
 - Antes de usar una API de Expo, consulta la documentación de la versión del SDK que indique `package.json`.
+- El identificador de la app es `com.quevamos.app` y es permanente: no lo cambies.
+- Las compilaciones se hacen con EAS (`eas.json`, perfil `production`, número de compilación gestionado por EAS). `.github/workflows/testflight.yml` se lanza a mano porque el plan gratuito da 15 compilaciones de iOS al mes; necesita el secreto `EXPO_TOKEN` y `ascAppId` en `eas.json`.
 - `src/motor/` lo usan la app y el servidor: no puede importar nada de Expo ni de React Native. Tiene su propio `tsconfig.json` y un `package.json` que lo marca como ESM para que el servidor lo cargue sin las dependencias de la app.
 - Servidor: las migraciones de `servidor/src/bd/migraciones.ts` no se editan una vez publicadas; un cambio de esquema es una migración nueva al final. Todo el SQL va con parámetros (`$1`, `$2`…), nunca concatenando datos.
 - Servidor: nunca registres ni devuelvas tokens, códigos de acceso ni correos en claro; la única excepción es `CorreoConsola`, que solo existe en desarrollo. Los errores para la app se lanzan con `ErrorApi` (código estable y mensaje en español).
